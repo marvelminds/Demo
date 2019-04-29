@@ -25,10 +25,13 @@ def pose():
     pub = rospy.Publisher("robot_pose", Float32)
 
     rospy.rate(10)     #Sets rate of pose to 10 Hz
-    if x2 > x1 :  #Quadrant1 and 4: atan() works from -90 to 90
+    if x2 >= x1 :  #Quadrant1 and 4: atan() works from -90 to 90
         pose = math.atan( (y2 - y1)/(x2 - x1) )
-    if x2 < x1:   #Quadrant2 and 3
-        pose = math.atan( (x1 - x2)/(x2 - x1) )
+    if x2 < x1 and y2 <= y1:   #Quadrant2 and 3
+        pose = math.atan( (y2 - y1)/(x2 - x1) ) + 180
+    if x2 < x1 and y2 > y1:
+    	pose = 180 + math.atan( (y2 - y1)/(x2 - x1) )
+
     
     pub.publish(pose)
     rate.sleep()
